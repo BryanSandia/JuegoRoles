@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Diagrama UML - JuegoRolesSolid (Corregido)</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        min-height: 100vh;
+        padding: 20px;
+        color: #333;
+    }
+    h1 {
+        text-align: center;
+        color: white;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    .subtitle {
+        text-align: center;
+        color: #e0e0e0;
+        margin-bottom: 30px;
+        font-style: italic;
+    }
+    .container {
+        position: relative;
+        width: 2000px;
+        height: 1600px;
+        margin: 0 auto;
+        background: rgba(255,255,255,0.97);
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        padding: 40px;
+    }
+    svg.relations {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+    }
+    .class-box {
+        position: absolute;
+        background: white;
+        border: 2px solid #2c3e50;
+        border-radius: 8px;
+        box-shadow: 3px 3px 10px rgba(0,0,0,0.15);
+        z-index: 2;
+        font-size: 11px;
+        transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .class-box:hover {
+        transform: translateY(-4px);
+        box-shadow: 5px 8px 20px rgba(0,0,0,0.25);
+    }
+    .class-header {
+        background: #34495e;
+        color: white;
+        padding: 10px 12px;
+        text-align: center;
+        font-weight: bold;
+        border-bottom: 2px solid #2c3e50;
+        border-radius: 6px 6px 0 0;
+        font-size: 12px;
+    }
+    .class-header.abstract {
+        background: linear-gradient(135deg, #8e44ad, #9b59b6);
+        font-style: italic;
+    }
+    .class-header.interface {
+        background: linear-gradient(135deg, #16a085, #1abc9c);
+        font-style: italic;
+    }
+    .class-header.main {
+        background: linear-gradient(135deg, #c0392b, #e74c3c);
+    }
+    .class-header.service {
+        background: linear-gradient(135deg, #e67e22, #f39c12);
+    }
+    .class-section {
+        padding: 10px 12px;
+        border-bottom: 1px solid #bdc3c7;
+        font-family: 'Consolas', 'Courier New', monospace;
+        min-height: 35px;
+        line-height: 1.6;
+    }
+    .class-section:last-child { border-bottom: none; }
+    .class-section.attributes { background: #ecf0f1; }
+    .class-section.methods { background: #f8f9fa; }
+    .legend {
+        position: absolute;
+        bottom: 40px;
+        right: 40px;
+        background: white;
+        border: 2px solid #2c3e50;
+        border-radius: 8px;
+        padding: 15px;
+        font-size: 12px;
+        z-index: 3;
+        box-shadow: 2px 2px 8px rgba(0,0,0,0.15);
+    }
+    .legend h3 { margin-bottom: 10px; color: #2c3e50; }
+    .legend-item { display: flex; align-items: center; margin: 8px 0; }
+    .legend-line { width: 60px; height: 20px; margin-right: 10px; }
+    .title-tag {
+        display: inline-block;
+        background: #f39c12;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 10px;
+        margin-left: 5px;
+    }
+    .multiplicity {
+        fill: #c0392b;
+        font-weight: bold;
+        font-size: 13px;
+        font-family: 'Segoe UI', sans-serif;
+    }
+</style>
+</head>
+<body>
+
+<h1>⚔️ Diagrama UML - JuegoRolesSolid (Corregido)</h1>
+<p class="subtitle">Sistema de combate por turnos aplicando principios SOLID</p>
+
+<div class="container">
+
+    <svg class="relations" viewBox="0 0 2000 1600" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <marker id="inheritance" markerWidth="16" markerHeight="16" refX="14" refY="8" orient="auto">
+                <polygon points="0,0 16,8 0,16" fill="white" stroke="#27ae60" stroke-width="1.8"/>
+            </marker>
+            <marker id="implementation" markerWidth="16" markerHeight="16" refX="14" refY="8" orient="auto">
+                <polygon points="0,0 16,8 0,16" fill="white" stroke="#3498db" stroke-width="1.8"/>
+            </marker>
+            <marker id="composition" markerWidth="16" markerHeight="16" refX="0" refY="8" orient="auto">
+                <polygon points="0,8 8,0 16,8 8,16" fill="#e74c3c" stroke="#c0392b" stroke-width="1.8"/>
+            </marker>
+            <marker id="dependency" markerWidth="14" markerHeight="14" refX="12" refY="7" orient="auto">
+                <polyline points="0,0 14,7 0,14" fill="none" stroke="#3498db" stroke-width="1.8"/>
+            </marker>
+            <marker id="association" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+                <line x1="0" y1="6" x2="12" y2="6" stroke="#9b59b6" stroke-width="1.8"/>
+            </marker>
+        </defs>
+
+        <!-- IMPLEMENTACIÓN: Interfaces -> Personaje -->
+        <path d="M 400,140 L 400,220 L 700,220 L 700,300" stroke="#3498db" stroke-width="2" fill="none" stroke-dasharray="8,5" marker-end="url(#implementation)"/>
+        <path d="M 1200,140 L 1200,220 L 700,220 L 700,300" stroke="#3498db" stroke-width="2" fill="none" stroke-dasharray="8,5" marker-end="url(#implementation)"/>
+
+        <!-- HERENCIA: Personaje -> Personajes Concretos -->
+        <path d="M 700,520 L 700,600 L 300,600 L 300,700" stroke="#27ae60" stroke-width="2.2" fill="none" marker-end="url(#inheritance)"/>
+        <path d="M 700,520 L 700,600 L 700,600 L 700,700" stroke="#27ae60" stroke-width="2.2" fill="none" marker-end="url(#inheritance)"/>
+        <path d="M 700,520 L 700,600 L 1100,600 L 1100,700" stroke="#27ae60" stroke-width="2.2" fill="none" marker-end="url(#inheritance)"/>
+
+        <!-- COMPOSICIÓN: Personaje -> Interfaces Habilidades -->
+        <path d="M 880,420 L 1050,420 L 1050,360 L 1200,360" stroke="#c0392b" stroke-width="2.8" fill="none" marker-start="url(#composition)"/>
+        <text x="950" y="410" class="multiplicity">1</text>
+        
+        <path d="M 880,420 L 1050,420 L 1050,300 L 1550,300 L 1550,360" stroke="#c0392b" stroke-width="2.8" fill="none" marker-start="url(#composition)"/>
+        <text x="1300" y="290" class="multiplicity">1</text>
+
+        <!-- IMPLEMENTACIÓN: Habilidades -> Concretas -->
+        <path d="M 1300,460 L 1300,540 L 1150,540 L 1150,700" stroke="#3498db" stroke-width="2" fill="none" stroke-dasharray="8,5" marker-end="url(#implementation)"/>
+        <path d="M 1300,460 L 1300,540 L 1400,540 L 1400,700" stroke="#3498db" stroke-width="2" fill="none" stroke-dasharray="8,5" marker-end="url(#implementation)"/>
+        <path d="M 1300,460 L 1300,540 L 1650,540 L 1650,700" stroke="#3498db" stroke-width="2" fill="none" stroke-dasharray="8,5" marker-end="url(#implementation)"/>
+        
+        <path d="M 1650,460 L 1650,820 L 1400,820 L 1400,900" stroke="#3498db" stroke-width="2" fill="none" stroke-dasharray="8,5" marker-end="url(#implementation)"/>
+        <path d="M 1650,460 L 1650,900" stroke="#3498db" stroke-width="2" fill="none" stroke-dasharray="8,5" marker-end="url(#implementation)"/>
+
+        <!-- ============================================ -->
+        <!-- NUEVAS RELACIONES AGREGADAS                  -->
+        <!-- ============================================ -->
+        
+        <!-- FabricaPersonajes -> Personaje (Dependencia) -->
+        <path d="M 300,1150 L 300,1050 L 700,1050 L 700,520" stroke="#e67e22" stroke-width="2" fill="none" stroke-dasharray="8,5" marker-end="url(#dependency)"/>
+        
+        <!-- FabricaPersonajes -> Habilidades concretas (Dependencia) -->
+        <path d="M 400,1150 L 400,1080 L 1150,1080 L 1150,800" stroke="#e67e22" stroke-width="2" fill="none" stroke-dasharray="8,5" marker-end="url(#dependency)"/>
+        
+        <!-- Combate -> Combatiente (Dependencia) -->
+        <path d="M 700,1150 L 700,1080 L 400,1080 L 400,140" stroke="#e67e22" stroke-width="2" fill="none" stroke-dasharray="8,5" marker-end="url(#dependency)"/>
+        
+        <!-- Combate -> ResultadoCombate (Dependencia) -->
+        <path d="M 800,1150 L 950,1150 L 950,1150 L 1100,1150" stroke="#e67e22" stroke-width="2" fill="none" stroke-dasharray="8,5" marker-end="url(#dependency)"/>
+        
+        <!-- ResultadoCombate -> Combatiente (Asociación) -->
+        <path d="M 1100,1100 L 1100,1000 L 400,1000 L 400,140" stroke="#9b59b6" stroke-width="2" fill="none" marker-end="url(#association)"/>
+        <text x="750" y="990" class="multiplicity" fill="#9b59b6">2</text>
+
+        <!-- Main -> Servicios (Dependencias existentes) -->
+        <path d="M 800,1400 L 800,1480 L 300,1480 L 300,1250" stroke="#3498db" stroke-width="2" fill="none" stroke-dasharray="8,5" marker-end="url(#dependency)"/>
+        <path d="M 800,1400 L 800,1480 L 700,1480 L 700,1250" stroke="#3498db" stroke-width="2" fill="none" stroke-dasharray="8,5" marker-end="url(#dependency)"/>
+    </svg>
+
+    <!-- INTERFACES DE PERSONAJE -->
+    <div class="class-box" style="left: 250px; top: 50px; width: 300px;">
+        <div class="class-header interface">«interface» Combatiente</div>
+        <div class="class-section methods">
+            + obtenerNombre(): String<br>
+            + obtenerVida(): int<br>
+            + estaVivo(): boolean<br>
+            + usarAtaque(): int<br>
+            + recibirDefensa(int): void<br>
+            + ganarExperiencia(int): void<br>
+            + subirNivel(): void<br>
+            + estado(): String
+        </div>
+    </div>
+
+    <div class="class-box" style="left: 1050px; top: 50px; width: 300px;">
+        <div class="class-header interface">«interface» PerfilPersonaje</div>
+        <div class="class-section methods">
+            + obtenerNivel(): int<br>
+            + obtenerBonoDefensa(): int
+        </div>
+    </div>
+
+    <!-- CLASE ABSTRACTA PERSONAJE -->
+    <div class="class-box" style="left: 500px; top: 300px; width: 380px;">
+        <div class="class-header abstract">«abstract» Personaje</div>
+        <div class="class-section attributes">
+            # nombre: String<br>
+            # vida: int<br>
+            # vidaMaxima: int<br>
+            # experiencia: int<br>
+            # nivel: int<br>
+            - habilidadAtaque: HabilidadAtaque<br>
+            - habilidadDefensa: HabilidadDefensa
+        </div>
+        <div class="class-section methods">
+            # Personaje(String, HabilidadAtaque, HabilidadDefensa)<br>
+            + obtenerNombre(): String<br>
+            + obtenerVida(): int<br>
+            + estaVivo(): boolean<br>
+            + usarAtaque(): int<br>
+            + recibirDefensa(int): void<br>
+            + ganarExperiencia(int): void<br>
+            + subirNivel(): void<br>
+            + estado(): String
+        </div>
+    </div>
+
+    <!-- INTERFACES DE HABILIDADES -->
+    <div class="class-box" style="left: 1200px; top: 300px; width: 200px;">
+        <div class="class-header interface">«interface»<br>HabilidadAtaque</div>
+        <div class="class-section methods">
+            + usar(PerfilPersonaje<br>&nbsp;&nbsp;usuario): int
+        </div>
+    </div>
+
+    <div class="class-box" style="left: 1550px; top: 300px; width: 200px;">
+        <div class="class-header interface">«interface»<br>HabilidadDefensa</div>
+        <div class="class-section methods">
+            + proteger(int danio,<br>&nbsp;&nbsp;PerfilPersonaje<br>&nbsp;&nbsp;defensor): void
+        </div>
+    </div>
+
+    <!-- PERSONAJES CONCRETOS -->
+    <div class="class-box" style="left: 150px; top: 700px; width: 300px;">
+        <div class="class-header">Guerrero <span class="title-tag">extends</span></div>
+        <div class="class-section methods">
+            + Guerrero(String,<br>&nbsp;&nbsp;HabilidadAtaque,<br>&nbsp;&nbsp;HabilidadDefensa)
+        </div>
+    </div>
+
+    <div class="class-box" style="left: 550px; top: 700px; width: 300px;">
+        <div class="class-header">Mago <span class="title-tag">extends</span></div>
+        <div class="class-section methods">
+            + Mago(String,<br>&nbsp;&nbsp;HabilidadAtaque,<br>&nbsp;&nbsp;HabilidadDefensa)
+        </div>
+    </div>
+
+    <div class="class-box" style="left: 950px; top: 700px; width: 300px;">
+        <div class="class-header">Arquero <span class="title-tag">extends</span></div>
+        <div class="class-section methods">
+            + Arquero(String,<br>&nbsp;&nbsp;HabilidadAtaque,<br>&nbsp;&nbsp;HabilidadDefensa)
+        </div>
+    </div>
+
+    <!-- HABILIDADES DE ATAQUE CONCRETAS -->
+    <div class="class-box" style="left: 1050px; top: 700px; width: 200px;">
+        <div class="class-header">EspadaCuerpo<br>ACuerpo <span class="title-tag">impl</span></div>
+        <div class="class-section methods">
+            + usar(PerfilPersonaje): int
+        </div>
+    </div>
+
+    <div class="class-box" style="left: 1300px; top: 700px; width: 200px;">
+        <div class="class-header">HechizoMagico <span class="title-tag">impl</span></div>
+        <div class="class-section methods">
+            + usar(PerfilPersonaje): int
+        </div>
+    </div>
+
+    <div class="class-box" style="left: 1550px; top: 700px; width: 200px;">
+        <div class="class-header">TiroPreciso <span class="title-tag">impl</span></div>
+        <div class="class-section methods">
+            + usar(PerfilPersonaje): int
+        </div>
+    </div>
+
+    <!-- HABILIDADES DE DEFENSA CONCRETAS -->
+    <div class="class-box" style="left: 1300px; top: 900px; width: 250px;">
+        <div class="class-header">EscudoDefensivo <span class="title-tag">impl</span></div>
+        <div class="class-section methods">
+            + proteger(int,<br>&nbsp;&nbsp;PerfilPersonaje): void
+        </div>
+    </div>
+
+    <div class="class-box" style="left: 1550px; top: 900px; width: 200px;">
+        <div class="class-header">Evadir <span class="title-tag">impl</span></div>
+        <div class="class-section methods">
+            + proteger(int,<br>&nbsp;&nbsp;PerfilPersonaje): void
+        </div>
+    </div>
+
+    <!-- SERVICIOS -->
+    <div class="class-box" style="left: 150px; top: 1150px; width: 300px;">
+        <div class="class-header service">FabricaPersonajes <span class="title-tag">Factory</span></div>
+        <div class="class-section methods">
+            - FabricaPersonajes()<br>
+            + static crearGuerrero(String): Personaje<br>
+            + static crearMago(String): Personaje<br>
+            + static crearArquero(String): Personaje
+        </div>
+    </div>
+
+    <div class="class-box" style="left: 550px; top: 1150px; width: 250px;">
+        <div class="class-header service">Combate</div>
+        <div class="class-section methods">
+            + Combate()<br>
+            + luchar(Combatiente,<br>&nbsp;&nbsp;Combatiente):<br>&nbsp;&nbsp;ResultadoCombate
+        </div>
+    </div>
+
+    <div class="class-box" style="left: 950px; top: 1150px; width: 300px;">
+        <div class="class-header service">ResultadoCombate</div>
+        <div class="class-section attributes">
+            - ganador: Combatiente<br>
+            - perdedor: Combatiente
+        </div>
+        <div class="class-section methods">
+            + obtenerGanador():<br>&nbsp;&nbsp;Combatiente<br>
+            + obtenerPerdedor():<br>&nbsp;&nbsp;Combatiente
+        </div>
+    </div>
+
+    <!-- CLASE MAIN -->
+    <div class="class-box" style="left: 600px; top: 1350px; width: 400px;">
+        <div class="class-header main">JuegoRolesSolid <span class="title-tag">MAIN</span></div>
+        <div class="class-section methods">
+            + static main(String[]): void
+        </div>
+    </div>
+
+    <!-- LEYENDA -->
+    <div class="legend">
+        <h3>📖 Leyenda de Relaciones</h3>
+        <div class="legend-item">
+            <svg class="legend-line"><line x1="0" y1="10" x2="40" y2="10" stroke="#27ae60" stroke-width="2.2"/><polygon points="40,10 28,4 28,16" fill="white" stroke="#27ae60" stroke-width="1.8"/></svg>
+            <span><b>Herencia</b> (Generalización)</span>
+        </div>
+        <div class="legend-item">
+            <svg class="legend-line"><line x1="0" y1="10" x2="40" y2="10" stroke="#3498db" stroke-width="2" stroke-dasharray="6,4"/><polygon points="40,10 28,4 28,16" fill="white" stroke="#3498db" stroke-width="1.8"/></svg>
+            <span><b>Implementación</b> (Interfaces)</span>
+        </div>
+        <div class="legend-item">
+            <svg class="legend-line"><line x1="0" y1="10" x2="60" y2="10" stroke="#c0392b" stroke-width="2.8"/><polygon points="0,10 8,4 16,10 8,16" fill="#e74c3c" stroke="#c0392b" stroke-width="1.8"/></svg>
+            <span><b>Composición</b> (Todo-Parte)</span>
+        </div>
+        <div class="legend-item">
+            <svg class="legend-line"><line x1="0" y1="10" x2="40" y2="10" stroke="#e67e22" stroke-width="2" stroke-dasharray="6,4"/><polyline points="40,10 28,4 28,16" fill="none" stroke="#e67e22" stroke-width="1.8"/></svg>
+            <span><b>Dependencia</b> (Servicios)</span>
+        </div>
+        <div class="legend-item">
+            <svg class="legend-line"><line x1="0" y1="10" x2="40" y2="10" stroke="#9b59b6" stroke-width="2"/><line x1="40" y1="10" x2="42" y2="10" stroke="#9b59b6" stroke-width="2"/></svg>
+            <span><b>Asociación</b> (Referencia)</span>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
