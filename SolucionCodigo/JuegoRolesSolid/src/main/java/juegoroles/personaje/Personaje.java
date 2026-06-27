@@ -11,17 +11,23 @@ public abstract class Personaje implements Combatiente, PerfilPersonaje {
     private int nivel;
     private final HabilidadAtaque habilidadAtaque;
     private final HabilidadDefensa habilidadDefensa;
+    private int energia;
+    private int cooldown;
+    
 
     protected Personaje(String nombre, int vidaMaxima, int nivel,
                         HabilidadAtaque habilidadAtaque,
-                        HabilidadDefensa habilidadDefensa) {
+                        HabilidadDefensa habilidadDefensa, int energia) {
         this.nombre = nombre;
         this.vidaMaxima = vidaMaxima;
         this.vida = vidaMaxima;
         this.nivel = nivel;
         this.experiencia = 0;
+        this.energia = energia;
+        this.cooldown = 0;
         this.habilidadAtaque = habilidadAtaque;
         this.habilidadDefensa = habilidadDefensa;
+        
     }
 
     @Override
@@ -85,4 +91,32 @@ public abstract class Personaje implements Combatiente, PerfilPersonaje {
     public int obtenerBonoDefensa() {
         return 1 + nivel;
     }
+    public int getEnergia() {
+    return energia;
+}
+
+public int getCooldown() {
+    return cooldown;
+}
+
+public void reducirCooldown() {
+    if (cooldown > 0) {
+        cooldown--;
+    }
+}
+
+public void usarHabilidadEspecial() throws Exception {
+
+    if (energia < 20) {
+        throw new Exception("No tienes suficiente energía.");
+    }
+
+    if (cooldown > 0) {
+        throw new Exception("La habilidad está en cooldown.");
+    }
+
+    energia -= 20;
+    cooldown = 3;
+}
+public abstract void habilidadEspecial() throws Exception;
 }
