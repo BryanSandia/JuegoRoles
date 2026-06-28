@@ -1,9 +1,13 @@
 package juegoroles.personaje;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
+import juegoroles.estados.PersonajeConEstados;
 import juegoroles.inventario.Arma;
 import juegoroles.inventario.Armadura;
 import juegoroles.inventario.Objeto;
-import java.util.ArrayList;
-import java.util.List;
 public class PersonajeEquipado implements Combatiente {
     private final Combatiente personaje;
     private final List<Objeto> inventario;
@@ -23,7 +27,7 @@ public class PersonajeEquipado implements Combatiente {
         if (!inventario.contains(arma)) {
             throw new IllegalArgumentException("El arma no está en el inventario");
         }
-        if (!arma.puedeSerEquipadoPor(personaje)) {
+        if (!arma.puedeSerEquipadoPor(obtenerPersonajeReal())) {
             throw new IllegalArgumentException("Este personaje no puede equipar esta arma");
         }
         this.armaEquipada = arma;
@@ -33,7 +37,7 @@ public class PersonajeEquipado implements Combatiente {
         if (!inventario.contains(armadura)) {
             throw new IllegalArgumentException("La armadura no está en el inventario");
         }
-        if (!armadura.puedeSerEquipadoPor(personaje)) {
+        if (!armadura.puedeSerEquipadoPor(obtenerPersonajeReal())) {
             throw new IllegalArgumentException("Este personaje no puede equipar esta armadura");
         }
         this.armaduraEquipada = armadura;
@@ -49,6 +53,33 @@ public class PersonajeEquipado implements Combatiente {
 
     public Combatiente obtenerPersonajeBase(){
         return personaje;
+    }
+
+    private Combatiente obtenerPersonajeReal() {
+        Combatiente actual = personaje;
+
+        while (actual instanceof PersonajeEquipado) {
+            actual = ((PersonajeEquipado) actual).obtenerPersonajeBase();
+        }
+
+        if (actual instanceof PersonajeConEstados) {
+            try {
+                Field campoBase = PersonajeConEstados.class.getDeclaredField("personajeBase");
+                campoBase.setAccessible(true);
+                Object valor = campoBase.get(actual);
+                if (valor instanceof Combatiente) {
+                    return (Combatiente) valor;
+                }
+            } catch (ReflectiveOperationException ex) {
+                // Se mantiene el personaje envuelto si no se puede desanidar.
+            }
+        }
+
+        return actual;
+    }
+
+    public List<Objeto> obtenerInventario() {
+        return inventario;
     }
     
     @Override
